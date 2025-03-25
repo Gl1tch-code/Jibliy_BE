@@ -24,7 +24,6 @@ public class JwtTokenService {
 
     public boolean validateToken(String token) {
         try {
-            // Updated for version 0.12.5
             Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
         } catch (Exception e) {
@@ -32,9 +31,7 @@ public class JwtTokenService {
         }
     }
 
-    // Get username from token
     public String extractUsername(String token) {
-        // Updated for version 0.12.5
         Claims claims = Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
         return claims.getSubject();
     }

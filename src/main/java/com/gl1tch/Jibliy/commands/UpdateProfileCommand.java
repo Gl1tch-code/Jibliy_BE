@@ -33,7 +33,7 @@ public class UpdateProfileCommand {
 
     public boolean isValidPhoneNumber() {
         if (this.phoneNumber == null || this.phoneNumber.isEmpty()) {
-            return true; // or false if you want to make it mandatory.
+            return true;
         }
         return PHONE_NUMBER_PATTERN.matcher(this.phoneNumber).matches();
     }

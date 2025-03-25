@@ -15,8 +15,5 @@ spring:
       ddl-auto: update
     show-sql: true
 
-
-
-
 jwt:
   secret: 21255abfd27820e8727b3a30ae3e121ba058cfee7488f05b6e36e4f77a3ce920

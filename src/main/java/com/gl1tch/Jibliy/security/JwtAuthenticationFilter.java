@@ -54,7 +54,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean validateToken(String token) {
         try {
-            // Updated for version 0.12.5
             Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token);
             return true;
         } catch (Exception e) {
