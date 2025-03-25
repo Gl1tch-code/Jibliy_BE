@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: Jibliy
+  datasource:
+    url: jdbc:postgresql://localhost:5432/jibliy_db
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+
+
+jwt:
+  secret: 21255abfd27820e8727b3a30ae3e121ba058cfee7488f05b6e36e4f77a3ce920
