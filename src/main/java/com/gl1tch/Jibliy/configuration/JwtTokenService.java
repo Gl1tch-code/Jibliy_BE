@@ -1,4 +1,4 @@
-package com.gl1tch.Jibliy.security;
+package com.gl1tch.Jibliy.configuration;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -6,7 +6,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 @Service

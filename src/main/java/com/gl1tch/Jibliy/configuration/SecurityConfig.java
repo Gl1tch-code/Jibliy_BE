@@ -1,4 +1,4 @@
-package com.gl1tch.Jibliy.security;
+package com.gl1tch.Jibliy.configuration;
 
 import com.gl1tch.Jibliy.service.customUserDetails.CustomUserDetailsService;
 import com.gl1tch.Jibliy.repository.UserRepository;

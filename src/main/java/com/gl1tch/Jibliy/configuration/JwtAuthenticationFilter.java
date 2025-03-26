@@ -1,4 +1,4 @@
-package com.gl1tch.Jibliy.security;
+package com.gl1tch.Jibliy.configuration;
 
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
