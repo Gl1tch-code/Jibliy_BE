@@ -17,7 +17,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String senderEmail;
 
-    public void sendOtpEmail(String recipientEmail, String otp) throws MessagingException {
+    public void sendOtpEmail(String recipientEmail, String otp, String username, String fullName) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
 
@@ -30,7 +30,9 @@ public class EmailService {
                 "    <div style=\"border-bottom:1px solid #eee\">\n" +
                 "      <a href=\"\" style=\"font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600\">Jibliy</a>\n" +
                 "    </div>\n" +
-                "    <p style=\"font-size:1.1em\">Changement de mot de pass,</p>\n" +
+                "    <p style=\"font-size:1.1em\">Changement de mot de pass, (" +
+                ((username != null) ? username : fullName) +
+                ")</p>\n" +
                 "    <p>Vous pouver utiliser ce code OTP pour changer votre mot de pass. Le code OTP est valable pour 10 minutes.</p>\n" +
                 "    <h2 style=\"background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;\">" +
                 otp +

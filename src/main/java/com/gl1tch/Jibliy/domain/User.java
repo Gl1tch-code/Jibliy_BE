@@ -15,14 +15,20 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String username;
-    private CityEnum city;
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    private String fullName;
+
+    @Enumerated(value = EnumType.STRING)
+    private CityEnum city;
     private String phoneNumber;
     private String location;
     private String password;

@@ -17,9 +17,28 @@ public class AuthenticationService {
 
     public User registerInitialUser(InitialSignupCommand initialSignupRequest) {
 
+        if (userRepository.existsByEmail(initialSignupRequest.getEmail())){
+            throw new IllegalArgumentException("هذا البريد موجود، المرجو تسجيل الدخول");
+        }
         User user = new User();
         user.setEmail(initialSignupRequest.getEmail());
         user.setPassword(passwordEncoder.encode(initialSignupRequest.getPassword()));
+
+        return userRepository.save(user);
+    }
+
+    public User updateUserProfile(UpdateProfileCommand updateProfileRequest) {
+        User user = userRepository.findById(updateProfileRequest.getId())
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+
+        if (userRepository.existsByUsername(updateProfileRequest.getUsername())) {
+            throw new IllegalArgumentException("Username already in use");
+        }
+        user.setUsername(updateProfileRequest.getUsername());
+        user.setFullName(updateProfileRequest.getFullName());
+        user.setCity(updateProfileRequest.getCity());
+        user.setPhoneNumber(updateProfileRequest.getPhoneNumber());
+        user.setLocation(updateProfileRequest.getLocation());
 
         return userRepository.save(user);
     }
@@ -33,17 +52,5 @@ public class AuthenticationService {
         } else {
             throw new IllegalStateException("Invalid password");
         }
-    }
-
-    public User updateUserProfile(UpdateProfileCommand updateProfileRequest) {
-        User user = userRepository.findById(updateProfileRequest.getId())
-                .orElseThrow(() -> new IllegalStateException("User not found"));
-
-        user.setUsername(updateProfileRequest.getUsername());
-        user.setCity(updateProfileRequest.getCity());
-        user.setPhoneNumber(updateProfileRequest.getPhoneNumber());
-        user.setLocation(updateProfileRequest.getLocation());
-
-        return userRepository.save(user);
     }
 }

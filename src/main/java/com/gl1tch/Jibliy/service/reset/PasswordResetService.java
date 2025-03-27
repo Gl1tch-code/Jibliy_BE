@@ -30,7 +30,7 @@ public class PasswordResetService {
     private OtpRepository otpRepository;
 
     public void requestOtp(String email) throws MessagingException {
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("هذا البريد غير موجود، المرجوا إنشاء حساب"));
 
         String otpValue = generateOtp();
         LocalDateTime expiryDate = LocalDateTime.now().plusMinutes(10);
@@ -42,15 +42,15 @@ public class PasswordResetService {
 
         otpRepository.save(otp);
 
-        emailService.sendOtpEmail(email, otpValue);
+        emailService.sendOtpEmail(email, otpValue, user.getUsername(), user.getFullName());
     }
 
-    public void verifyOtpAndResetPassword(String email, String otp, String newPassword) {
+    public String verifyOtpAndResetPassword(String email, String otp, String newPassword) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
         Optional<Otp> otpOptional = otpRepository.findByUserAndOtp(user, otp);
 
         if (otpOptional.isEmpty()) {
-            throw new IllegalArgumentException("Invalid OTP.");
+            throw new IllegalArgumentException("رمز التأكيد غير صحيح");
         }
 
         Otp otpData = otpOptional.get();
@@ -60,9 +60,11 @@ public class PasswordResetService {
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
-        userRepository.save(user);
+        User updatedUser = userRepository.save(user);
 
         otpRepository.delete(otpData);
+
+        return updatedUser.getUsername();
     }
 
     private String generateOtp() {

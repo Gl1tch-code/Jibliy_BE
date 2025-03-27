@@ -8,6 +8,7 @@ import com.gl1tch.Jibliy.service.auth.AuthenticationService;
 import com.gl1tch.Jibliy.service.reset.PasswordResetService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,22 +28,27 @@ public class AuthenticationController {
     private PasswordResetService passwordResetService;
 
     @PostMapping("/initialSignup")
-    public ResponseEntity<Long> initialSignup(@Valid @RequestBody InitialSignupCommand initialSignupRequest) {
-        User user = authenticationService.registerInitialUser(initialSignupRequest);
-        return ResponseEntity.ok(user.getId());
+    public ResponseEntity<Object> initialSignup(@Valid @RequestBody InitialSignupCommand initialSignupRequest) {
+        try {
+            User user = authenticationService.registerInitialUser(initialSignupRequest);
+            return ResponseEntity.ok(user.getId());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) throws NoSuchAlgorithmException {
-        User user = authenticationService.login(username, password);
+    @PostMapping("/updateProfile")
+    public ResponseEntity<String> updateProfile(@Valid @RequestBody UpdateProfileCommand updateProfileRequest) throws NoSuchAlgorithmException {
+        updateProfileRequest.isValidPhoneNumber();
+        User user = authenticationService.updateUserProfile(updateProfileRequest);
         String token = jwtTokenService.generateToken(user.getUsername());
 
         return ResponseEntity.ok(token);
     }
 
-    @PostMapping("/updateProfile")
-    public ResponseEntity<String> updateProfile(@Valid @RequestBody UpdateProfileCommand updateProfileRequest) throws NoSuchAlgorithmException {
-        User user = authenticationService.updateUserProfile(updateProfileRequest);
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestParam String username, @RequestParam String password) throws NoSuchAlgorithmException {
+        User user = authenticationService.login(username, password);
         String token = jwtTokenService.generateToken(user.getUsername());
 
         return ResponseEntity.ok(token);
@@ -63,8 +69,8 @@ public class AuthenticationController {
     @PostMapping("/otp-verify")
     public ResponseEntity<String> verifyOtp(@RequestParam String email, @RequestParam String otp, @RequestBody String newPassword) {
         try {
-            passwordResetService.verifyOtpAndResetPassword(email, otp, newPassword);
-            return ResponseEntity.ok("Password reset successfully.");
+            String token = jwtTokenService.generateToken(passwordResetService.verifyOtpAndResetPassword(email, otp, newPassword));
+            return ResponseEntity.ok(token);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
