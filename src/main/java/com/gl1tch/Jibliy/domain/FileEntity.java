@@ -1,7 +1,13 @@
 package com.gl1tch.Jibliy.domain;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,24 +17,29 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-public class Category {
+public class FileEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @Column(columnDefinition = "boolean default false")
+    private boolean isBanner;
+
+    @Nullable
+    private String subCatId;
+
+    @Nullable
+    private String subCatName;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "file_id")
-    private FileEntity file;
-
+    private String fileName;
+    private String fileType;
+    private byte[] data;
 }

@@ -7,7 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT u FROM User u WHERE u.username = :username OR u.email = :username OR u.phoneNumber = :username")
+    @Query("""
+        SELECT u FROM User u
+            WHERE LOWER(REPLACE(u.username, ' ', '')) = LOWER(REPLACE(:username, ' ', ''))
+                OR LOWER(REPLACE(u.email, ' ', '')) = LOWER(REPLACE(:username, ' ', ''))
+                OR LOWER(REPLACE(u.fullName, ' ', '')) LIKE LOWER(CONCAT('%', REPLACE(:username, ' ', ''), '%'))
+                OR u.phoneNumber = :username
+    """)
     Optional<User> findByUsername(String username);
 
     @Query("SELECT u FROM User u WHERE u.email = :email")

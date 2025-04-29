@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CategoryDTO {
+public class BrandDTO {
     private Long id;
     private String name;
     private String imageId;

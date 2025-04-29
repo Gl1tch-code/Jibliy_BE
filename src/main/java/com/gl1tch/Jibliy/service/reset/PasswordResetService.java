@@ -64,7 +64,7 @@ public class PasswordResetService {
 
         otpRepository.delete(otpData);
 
-        return updatedUser.getUsername();
+        return updatedUser.getEmail();
     }
 
     private String generateOtp() {

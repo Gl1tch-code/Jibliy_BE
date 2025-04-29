@@ -1,13 +1,11 @@
 package com.gl1tch.Jibliy.api;
 
-import com.gl1tch.Jibliy.domain.Category;
+import com.gl1tch.Jibliy.commands.CategoryCommand;
 import com.gl1tch.Jibliy.dto.CategoryDTO;
-import com.gl1tch.Jibliy.dto.mappers.CategoryMapper;
-import com.gl1tch.Jibliy.repository.CategoryRepository;
+import com.gl1tch.Jibliy.service.category.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,14 +14,16 @@ import java.util.List;
 public class CategoriesController {
 
     @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private CategoryMapper categoryMapper;
+    private CategoryService categoryService;
 
     @GetMapping
-    public List<CategoryDTO> getCategories() {
-        List<Category> categories = categoryRepository.findAll();
-        return categoryMapper.toListDTO(categories);
+    public ResponseEntity<List<CategoryDTO>> getCategories() {
+        return ResponseEntity.ok(categoryService.getAllCategories());
     }
+
+    @PostMapping ResponseEntity<Void> createCategory(@RequestBody CategoryCommand categoryCommand, @RequestHeader("Authorization") String authHeader) {
+        categoryService.createCategory(categoryCommand, authHeader);
+        return ResponseEntity.ok().build();
+    }
+
 }

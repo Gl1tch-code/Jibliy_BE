@@ -1,6 +1,15 @@
 spring:
+  mvc:
+    log-request-details: true
   application:
     name: Jibliy
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+      enabled: true
+
   datasource:
     url: jdbc:postgresql://localhost:5432/jibliy_db
     username: postgres
@@ -8,12 +17,10 @@ spring:
     driverClassName: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    properties:
-      hibernate:
-        format_sql: true
     hibernate:
       ddl-auto: update
     show-sql: true
+
   mail:
     properties:
       mail:
@@ -28,3 +35,10 @@ spring:
 
 jwt:
   secret: 21255abfd27820e8727b3a30ae3e121ba058cfee7488f05b6e36e4f77a3ce920
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

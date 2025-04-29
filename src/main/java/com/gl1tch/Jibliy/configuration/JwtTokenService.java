@@ -14,9 +14,9 @@ public class JwtTokenService {
     @Value("${jwt.secret}")
     private String secretKey;
 
-    public String generateToken(String username) throws NoSuchAlgorithmException {
+    public String generateToken(String email) throws NoSuchAlgorithmException {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
@@ -30,7 +30,7 @@ public class JwtTokenService {
         }
     }
 
-    public String extractUsername(String token) {
+    public String extractEmail(String token) {
         Claims claims = Jwts.parser().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
         return claims.getSubject();
     }

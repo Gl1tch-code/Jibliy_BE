@@ -7,14 +7,23 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findBySubCategoryId(Long subCategoryId);
 
-    @Query("SELECT p FROM Product p JOIN p.brands b WHERE p.subCategory.id = :subCategoryId AND b.name = :brandName")
-    List<Product> findBySubCategoryIdAndBrandName(@Param("subCategoryId") Long subCategoryId, @Param("brandName") String brandName);
+    @Query("SELECT p FROM Product p WHERE p.id = :id")
+    Optional<Product> findProductById(Long id);
+
+    Optional<List<Product>> findBySubCategoryId(Long subCategoryId);
+
+    @Query("SELECT p FROM Product p WHERE p.subCategory.id = :subCategoryId AND p.brand.id = :brandId")
+    List<Product> findBySubCategoryIdAndBrandName(@Param("subCategoryId") Long subCategoryId, @Param("brandId") Long brandId);
 
     @Query("SELECT p FROM Product p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR LOWER(p.description) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     List<Product> searchProducts(@Param("searchTerm") String searchTerm);
+
+
+    @Query("SELECT p FROM Product p ORDER BY p.id")
+    List<Product> findAll();
 }
