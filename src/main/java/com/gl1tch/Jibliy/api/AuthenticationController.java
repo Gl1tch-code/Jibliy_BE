@@ -32,6 +32,11 @@ public class AuthenticationController {
     @Autowired
     private PasswordResetService passwordResetService;
 
+    @GetMapping("/health")
+    public ResponseEntity<Boolean> healthCheck() {
+        return ResponseEntity.ok(true);
+    }
+
     @PostMapping("/initialSignup")
     public ResponseEntity<Object> initialSignup(@Valid @RequestBody InitialSignupCommand initialSignupRequest) {
         try {
